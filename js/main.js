@@ -8,6 +8,7 @@ var regions = {
 	"kanto":"2/"
 };
 var pokedex;
+var names;
 
 $(document).ready(function() {
 	main();
@@ -22,7 +23,8 @@ function main() {
 function getList(list) {
 	pokedex = list;
 
-	for (var i = 0; i < pokedex.pokemon_entries.length; i++) {
-		$('div').append('<div>' + pokedex.pokemon_entries[i].pokemon_species.name + '</div>');
-	}
+	$.each(pokedex.pokemon_entries, function(key, value) {
+		var option = $('<option />').val(value.entry_number).text(value.pokemon_species.name);
+		$("#dropDownDest").append(option);
+	});
 }
