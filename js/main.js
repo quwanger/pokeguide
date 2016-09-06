@@ -1,30 +1,50 @@
 var url 		= 'http://pokeapi.co/api/';
 var version = 'v2';
 var resources = {
-	"pokedex":"/pokedex/"
+	"pokedex":"/pokedex/",
+	"pokemon":"/pokemon/"
 };
-var regions = {
-	"national":"1/",
-	"kanto":"2/"
-};
-var pokedex;
-var names;
 
 $(document).ready(function() {
-	main();
+	getNames();
 });
 
-function main() {
-	$.getJSON(url + version + resources.pokedex + regions.national, function(data) {
-		getList(data);
+/******************** EVENTS ********************/
+$('select').on('change', function() {
+	getSprites($(this).val() + '/');
+});
+
+/******************** GETTERS ********************/
+function getNames() {
+	$.getJSON(url + version + resources.pokedex + '1/', function(data) {
+		setNames(data);
 	});
 }
 
-function getList(list) {
-	pokedex = list;
+function getSprites(id) {
+	$.getJSON(url + version + resources.pokemon + id, function(data) {
+		setSprites(data);
+	});
+}
+/******************** GETTERS ********************/
 
-	$.each(pokedex.pokemon_entries, function(key, value) {
+/******************** SETTERS ********************/
+function setNames(json) {
+	var obj = json;
+
+	$.each(obj.pokemon_entries, function(key, value) {
 		var option = $('<option />').val(value.entry_number).text(value.pokemon_species.name);
-		$("#dropDownDest").append(option);
+		$(".dropdown-name").append(option);
 	});
+
+	$('#option-default').text('Select a Pokemon');
 }
+
+function setSprites(json) {
+	var obj = json;
+
+	$('<img />', {
+    src: obj.sprites.front_default
+	}).appendTo(".sprite-container");
+}
+/******************** SETTERS ********************/
